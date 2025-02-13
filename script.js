@@ -1,7 +1,6 @@
-//board
 let board;
-let boardWidth = 1500;
-let boardHeight = 705;
+let boardWidth = window.innerWidth * 0.9; // Adjust based on screen width
+let boardHeight = window.innerHeight * 0.9; // Adjust based on screen height
 let context;
 
 //bird
@@ -67,6 +66,7 @@ window.onload = function () {
     requestAnimationFrame(update);
     setInterval(placePipes, 1500); //every 1.5 seconds
     document.addEventListener("keydown", moveBird);
+    document.addEventListener("touchstart", moveBird); // Add touch event for mobile
 };
 
 function update() {
@@ -125,6 +125,7 @@ function update() {
         bgm.currentTime = 4000;
         setTimeout(() => {
             document.addEventListener("keydown", restartGame, { once: true });
+            document.addEventListener("touchstart", restartGame, { once: true }); // Add touch event for mobile
         }, 4000);
         return;
     }
@@ -163,7 +164,7 @@ function placePipes() {
 }
 
 function moveBird(e) {
-    if (e.code == "Space" || e.code == "ArrowUp" || e.code == "KeyW" || e.code == "Right") {
+    if (e.code == "Space" || e.code == "ArrowUp" || e.code == "KeyW" || e.code == "Right" || e.type == "touchstart") {
         if (bgm.paused) {
             bgm.play();
         }
@@ -188,4 +189,13 @@ function detectCollision(a, b) {
         a.y < b.y + b.height && //a's top left corner doesn't reach b's bottom left corner
         a.y + a.height > b.y //a's bottom left corner passes b's top left corner
     );
+}
+
+function restartGame() {
+    bird.y = birdY;
+    pipeArray = [];
+    score = 0;
+    gameOver = false;
+    showBoom = false;
+    bgm.play();
 }
